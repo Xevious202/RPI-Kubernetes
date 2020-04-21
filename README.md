@@ -1,8 +1,12 @@
-# RPI // from Nothing to Something // Kubernetes.md
+# RPI // from Nothing to Something // Kubernetes
+(4) Raspberry Pi 4 (4Gb)
+Ubuntu 19.10
+Docker CE
+Microk8s Kubernetes
 
 ## Prepare Hardware
 1. Load [Ubuntu Server] 19.10 onto sd card(s)
-2. Insert SD card into RPI and connect
+2. Insert SD card into RPI, power on, and directly connect via micro hdmi & keyboard
 3. Change Password (at prompt)
 4. Change [Hostname] by editing these files;
   * /etc/hostname
@@ -13,6 +17,7 @@
   * run `$ sudo netplan apply`
 7. **WIP** Configure [SSH]
   * ~~DO THE THINGS~~
+8. Disconnect from RPI, attach to ethernet interface and SSH in from work terminal
 8. Fix the Cgroup [bug]!
   * /boot/firmware/nobtcmd.txt
   * Append `cgroup_enable=memory cgroup_memory=1`
@@ -25,7 +30,7 @@ $ sudo ufw default allow routed
 ## Install [Docker] CE
 1. Uninstall old versions
   * `$ sudo apt-get remove docker docker-engine docker.io containerd runc`
-2. Update 'apt'package index
+2. Update 'apt' package index
   * `$ sudo apt-get update`
 3. Install packages to allow apt'to use a repository over HTTPS
 ```sh
@@ -50,7 +55,7 @@ $ sudo add-apt-repository \
   * Use `uname -m` to determine your architecture
 
 ## Install [Microk8s]
-1. Update 'apt'package index
+1. Update 'apt' package index
   * `$ sudo apt-get update`
 2. Install all updates available in 'apt' sources
   * `$ sudo apt-get upgrade`
@@ -58,6 +63,7 @@ $ sudo add-apt-repository \
   * `$ sudo snap install microk8s --classic`
 
 #### Build the [Cluster]
+###### Repeat above steps for each RPI first
 1. From Master node run
   * `$ sudo microk8s.add-node`
 2. Copy the `join` connection string and run on worker 1
@@ -84,7 +90,7 @@ $ sudo add-apt-repository \
 
 
 # BREAK ---- Below are notes----
-# ORDER 66: ICE 9
+# ICE 9
 99.) stop and remove Kubernetes SRC: https://codefresh.io/kubernetes-tutorial/local-kubernetes-linux-minikube-vs-microk8s/
 
 > remove nodes by either version a/b
