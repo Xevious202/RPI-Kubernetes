@@ -1,7 +1,7 @@
 # RPI // from Nothing to Something // Kubernetes
-(4) Raspberry Pi 4 (4Gb)
-Ubuntu 19.10
-Docker CE
+(4) Raspberry Pi 4 (4Gb) :
+Ubuntu 19.10 :
+Docker CE :
 Microk8s Kubernetes
 
 ## Prepare Hardware
