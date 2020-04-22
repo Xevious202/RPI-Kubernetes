@@ -3,7 +3,7 @@
 Ubuntu 19.10 :
 Docker CE :
 Microk8s Kubernetes
-
+### Warning: This document has high entropy, last updated 20200421
 ## Prepare Hardware
 1. Load [Ubuntu Server] 19.10 onto sd card(s)
 2. Insert SD card into RPI, power on, and directly connect via micro hdmi & keyboard
