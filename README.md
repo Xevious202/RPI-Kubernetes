@@ -8,7 +8,7 @@ Docker CE: Client & Server Version 19.03.8
 
 Microk8s Kubernetes: Client & Server Version 1.18.0
 
-### Warning: This document has high entropy, last valid test 20200421
+### Warning: This document has high entropy, last valid test TBD
 ## This document is a work in progress, it does not build a working RPI cluster YET.
 
 ## Prepare Hardware
