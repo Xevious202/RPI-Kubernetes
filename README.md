@@ -1,10 +1,11 @@
 # RPI // from Nothing to Something // Kubernetes
-(4) Raspberry Pi 4 (4Gb) :
-Ubuntu 19.10 :
-Docker CE :
-Microk8s Kubernetes
+(4) Raspberry Pi 4: 4Gb
+Ubuntu: 19.10 (GNU/Linux 5.3.0-1022-raspi2 aarch64)
+Docker CE: Client & Server Version 19.03.8
+Microk8s Kubernetes: Client & Server Version 1.18.0
 
 ### Warning: This document has high entropy, last valid test 20200421
+## This document is a work in progress, it does not build a working RPI cluster YET.
 
 ## Prepare Hardware
 1. Load [Ubuntu Server] 19.10 onto sd card(s)
@@ -55,6 +56,11 @@ $ sudo add-apt-repository \
    stable"
 ```
   * Use `uname -m` to determine your architecture
+7. Install Docker CE
+  * `$ sudo apt-get update`
+  * `$ sudo apt-get install docker-ce docker-ce-cli containerd.io`
+8. Enable docker on startup
+  * `$ sudo systemctl enable docker`
 
 ## Install [Microk8s]
 1. Update 'apt' package index
@@ -73,14 +79,22 @@ $ sudo add-apt-repository \
 4. Verify attached nodes from master
   * `$ sudo microk8s.kubectl get node`
 #### Post Install (Master Only)
-1. Create a [new user] account, give it kubectl rights  
+1. Create a [new user] account, give it kubectl and docker rights  
   * `$ sudo adduser <username>` and complete all fields
-  * `$ sudo usermod -a -G microk8s <username>`
+  * `$ sudo usermod -aG microk8s <username>`
+  * `$ sudo usermod -aG docker <username>`
   * `$ sudo chown -f -R <username> ~/.kube`
   * switch to user for all following steps
   * `$ su - <username>`
-2. Create alias (if Microk8s is only kubernetes implementation running in cluster)
-  * `$ alias kubectl='microk8s.kubectl'`
+2. Create permanent alias (if Microk8s is only kubernetes implementation running in cluster)
+  * From home folder create '.bash_alias'
+```sh
+#Alias for Microk8s.kubectl, will work on next login
+alias kubectl='microk8s.kubectl'
+```
+  * Save and exit
+  * Create temporary alias until next login
+    * `$ alias kubectl='microk8s.kubectl'`
 3. Enable Microk8s prepackaged Dashboard, DNS, and local storage services
   * `$ microk8s.enable dashboard dns storage`
 4. Connect to Grafana Dashboard using default credentials
@@ -105,7 +119,18 @@ $ create clusterrolebinding dashboard-admin-sa
   * Copy token
 5. Paste token into entry field of dashboard URL and submit
 
-#### **WIP:** Run your first Kubernetes workload!
+#### **WIP:** Deploy your first Kubernetes workload from public Docker
+1. Log into Docker
+  * `$docker login`
+  * Provide username/password
+2.  Ensure cluster is healthy
+  * `$ kubectl get nodes` (all nodes should be in 'ready' status)
+  * 
+  
+## test, source oreilly 'start containers using kubectl'
+kubectl run http --image=katacoda/docker-http-server:latest
+
+
 
 
 
