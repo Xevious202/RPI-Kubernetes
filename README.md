@@ -71,12 +71,14 @@ $ sudo add-apt-repository \
 4. Verify attached nodes from master
   * `$ sudo microk8s.kubectl get node`
 #### Post Install (Master Only)
-1. **WIP:** Create a new user account, give it kubectl rights  
-  * -Create user account-
+1. Create a [new user] account, give it kubectl rights  
+  * `$ sudo adduser <username>` and complete all fields
   * `$ sudo usermod -a -G microk8s <username>`
+  * `$ sudo chown -f -R <username> ~/.kube`
   * switch to user for all following steps
+  * `$ su - <username>`
 2. Create alias (if Microk8s is only kubernetes implementation running in cluster)
-  * `$ alias kubectl='microk8s kubectl'`
+  * `$ alias kubectl='microk8s.kubectl'`
 3. Enable Microk8s prepackaged Dashboard, DNS, and local storage services
   * `$ microk8s.enable dashboard dns storage`
 4. Connect to Grafana Dashboard using default credentials
@@ -87,7 +89,7 @@ $ sudo add-apt-repository \
 #### Configure and connect to Kubernetes [Dashboard] with dedicated credentials
 1. Connect to account authentication page URL
   * https://{Eth0-IP}:{cluster port}/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
-  * NOTE: Use `$ kubectl cluster-info` to get port if needed
+    * NOTE: Use `$ kubectl cluster-info` to get port if needed
 2. Create a Service Account (change name if desired)
   * `$ kubectl create serviceaccount dashboard-admin-sa`
 3. Bind new account to cluster admin role
@@ -185,5 +187,7 @@ microk8s.kubectl scale deployment microbot --replicas=2
 [MicroK8s]: <https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s#2-deploying-microk8s>
 
 [Cluster]: <https://discourse.ubuntu.com/t/how-to-build-a-raspberry-pi-kubernetes-cluster-using-microk8s/14792>
+
+[new user]: <https://www.cyberciti.biz/faq/create-a-user-account-on-ubuntu-linux/>
 
 [Dashboard]: <https://www.replex.io/blog/how-to-install-access-and-add-heapster-metrics-to-the-kubernetes-dashboard>
