@@ -84,6 +84,27 @@ $ sudo add-apt-repository \
   * Run `$ kubectl cluster-info` and copy Grafana URL
   * Open web browser (I use Firefox) and point to Grafana URL, exchanging the 127.0.0.1 for the eth0 IP
 
+#### Configure and connect to Kubernetes [Dashboard] with dedicated credentials
+1. Connect to account authentication page URL
+  * http://<Eth0-IP>:<cluster dashboard port>/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+2. Create a Service Account (change name if desired)
+  * `$ kubectl create serviceaccount dashboard-admin-sa`
+3. Bind new account to cluster admin role
+```sh
+$ create clusterrolebinding dashboard-admin-sa 
+--clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
+```
+4. Pull automatically created token for new account
+  * `$ kubectl get secrets`
+  * `$ kubectl describe secret <Name from previous command>`
+  * Copy token
+5. Paste token into entry field of dashboard URL and submit
+
+#### Thing
+
+
+
+
 #### **WIP:** Run your first Kubernetes workload!
 
 
@@ -163,3 +184,5 @@ microk8s.kubectl scale deployment microbot --replicas=2
 [MicroK8s]: <https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s#2-deploying-microk8s>
 
 [Cluster]: <https://discourse.ubuntu.com/t/how-to-build-a-raspberry-pi-kubernetes-cluster-using-microk8s/14792>
+
+[Dashboard]: <https://www.replex.io/blog/how-to-install-access-and-add-heapster-metrics-to-the-kubernetes-dashboard>
