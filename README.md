@@ -18,7 +18,7 @@ Microk8s Kubernetes
   * /etc/netplan/99_config.yaml
   * run `$ sudo netplan apply`
 7. **WIP** Configure [SSH]
-  * ~~DO THE THINGS~~
+  * ~~WORK IN PROGRESS~~ ADDITIONAL INFO HERE https://www.cyberciti.biz/faq/ubuntu-18-04-setup-ssh-public-key-authentication/
 8. Disconnect from RPI, attach to ethernet interface and SSH in from work terminal
 8. Fix the Cgroup [bug]!
   * /boot/firmware/nobtcmd.txt
