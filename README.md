@@ -105,75 +105,10 @@ $ create clusterrolebinding dashboard-admin-sa
   * Copy token
 5. Paste token into entry field of dashboard URL and submit
 
-#### Thing
-
-
-
-
 #### **WIP:** Run your first Kubernetes workload!
 
 
 
-
-# BREAK ---- Below are notes----
-# ICE 9
-99.) stop and remove Kubernetes SRC: https://codefresh.io/kubernetes-tutorial/local-kubernetes-linux-minikube-vs-microk8s/
-
-> remove nodes by either version a/b
->
-> a.) from master, <sudo microk8s.remove-node {node-name}>
->
-> bl) from leaf, <sudo microk8s.leave>
->
-> From EACH node run:
->
-> <microk8s status>
->
-> <microk8s.disable dashboard dns xxx xxxx xxxx xx>
->
-> <snap disable microk8s>
->
-> <sudo snap remove microk8s>
-
-
-
-### Useful Commands
-
-microk8s status (shows enabled services)
-
-microk8s start
-
-microk8s kubectl describe node | grep Taint
-
-sudo microk8s kubectl top node (shows processor/memory of all nodes)
-
-sudo *journalctl* -u snap.*microk8s*.daemon-kubelet 
-
-```
-kubectl get node
-```
-
-```
-microk8s.kubectl get all --all-namespaces
-microk8s.kubectl get deployments
-microk8s.kubectl get nodes
-microk8s.kubectl get services
-microk8s.kubectl get namespaces
-```
-
-```nohighlight
-microk8s.kubectl cluster-info
-```
-
-```
-kubectl describe pods ${POD_NAME}
-```
-
-```nohighlight
-microk8s.kubectl create deployment microbot --image=dontrebootme/microbot:v1
-microk8s.kubectl scale deployment microbot --replicas=2
-#microk8s.kubectl delete deployment/microbot service/microbot-service
-```
 [Ubuntu Server]: <https://ubuntu.com/download/raspberry-pi/thank-you?version=19.10.1&architecture=arm64+raspi3>
 
 [Hostname]: <https://www.cyberciti.biz/faq/ubuntu-change-hostname-command/>
