@@ -86,7 +86,7 @@ $ sudo add-apt-repository \
 
 #### Configure and connect to Kubernetes [Dashboard] with dedicated credentials
 1. Connect to account authentication page URL
-  * http://<Eth0-IP>:<cluster dashboard port>/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+  * http:// <Eth0-IP>:<cluster dashboard port>/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 2. Create a Service Account (change name if desired)
   * `$ kubectl create serviceaccount dashboard-admin-sa`
 3. Bind new account to cluster admin role
