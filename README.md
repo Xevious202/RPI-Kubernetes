@@ -1,7 +1,11 @@
 # RPI // from Nothing to Something // Kubernetes
+
 (4) Raspberry Pi 4: 4Gb
+
 Ubuntu: 19.10 (GNU/Linux 5.3.0-1022-raspi2 aarch64)
+
 Docker CE: Client & Server Version 19.03.8
+
 Microk8s Kubernetes: Client & Server Version 1.18.0
 
 ### Warning: This document has high entropy, last valid test 20200421
