@@ -72,7 +72,7 @@ $ sudo add-apt-repository \
 2. Install all updates available in 'apt' sources
   * `$ sudo apt-get upgrade`
 3. Use a snap to install the latest version
-  * `$ sudo snap install microk8s --classic`
+  * `$ sudo snap install microk8s --classic --channel=1.18/stable`
 
 #### Build the [Cluster]
 ###### Repeat above steps for each RPI first
@@ -131,6 +131,11 @@ $ create clusterrolebinding dashboard-admin-sa
   * `$ kubectl get nodes` (all nodes should be in 'ready' status)
   * 
   
+#### Basic control of pod allocation
+1. Using the [taint] feature
+  * remove node from future scheduling `$ kubectl taint nodes <nodename> key=value:NoSchedule`
+  * remove taint `$ kubectl taint nodes <nodename> <key=value:effect>-` Please note the '-' is NOT a typo!
+
 ## test, source oreilly 'start containers using kubectl'
 kubectl run http --image=katacoda/docker-http-server:latest
 
@@ -157,3 +162,5 @@ kubectl run http --image=katacoda/docker-http-server:latest
 [new user]: <https://www.cyberciti.biz/faq/create-a-user-account-on-ubuntu-linux/>
 
 [Dashboard]: <https://www.replex.io/blog/how-to-install-access-and-add-heapster-metrics-to-the-kubernetes-dashboard>
+
+[taint]: <https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/>
