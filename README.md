@@ -83,14 +83,16 @@ $ sudo add-apt-repository \
 4. Verify attached nodes from master
   * `$ sudo microk8s.kubectl get node`
 #### Post Install (Master Only)
-1. Create a [new user] account, give it kubectl and docker rights  
+1. 3. Enable Microk8s prepackaged Dashboard, DNS, and local storage services
+  * `$ microk8s.enable dashboard dns storage`
+2. Create a [new user] account, give it kubectl and docker rights  
   * `$ sudo adduser <username>` and complete all fields
   * `$ sudo usermod -aG microk8s <username>`
   * `$ sudo usermod -aG docker <username>`
   * `$ sudo chown -f -R <username> ~/.kube`
   * switch to user for all following steps
   * `$ su - <username>`
-2. Create permanent alias (if Microk8s is only kubernetes implementation running in cluster)
+3. Create permanent alias (if Microk8s is only kubernetes implementation running in cluster)
   * From home folder create '.bash_alias'
 ```sh
 #Alias for Microk8s.kubectl, will work on next login
@@ -99,8 +101,6 @@ alias kubectl='microk8s.kubectl'
   * Save and exit
   * Create temporary alias until next login
     * `$ alias kubectl='microk8s.kubectl'`
-3. Enable Microk8s prepackaged Dashboard, DNS, and local storage services
-  * `$ microk8s.enable dashboard dns storage`
 4. Connect to Grafana Dashboard using default credentials
   * Run `$ kubectl config view` and copy password field
   * Run `$ kubectl cluster-info` and copy Grafana URL
