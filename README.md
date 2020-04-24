@@ -83,7 +83,7 @@ $ sudo add-apt-repository \
 4. Verify attached nodes from master
   * `$ sudo microk8s.kubectl get node`
 #### Post Install (Master Only)
-1. 3. Enable Microk8s prepackaged Dashboard, DNS, and local storage services
+1. Enable Microk8s prepackaged Dashboard, DNS, and local storage services
   * `$ microk8s.enable dashboard dns storage`
 2. Create a [new user] account, give it kubectl and docker rights  
   * `$ sudo adduser <username>` and complete all fields
