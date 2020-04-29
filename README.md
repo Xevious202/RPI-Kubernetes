@@ -44,8 +44,8 @@ network:
   * `$ ssh -l ubuntu <Configured device IP>
   * Continue if you successfuly get into the shell
 8. Disconnect RPI, attach to ethernet interface and SSH in from work terminal for remaining steps
-8. Fix the Cgroup [bug]!
-  * /boot/firmware/nobtcmd.txt
+8. Fix the Cgroup [bug], note below is an educated guess as v20.04 has a different file
+  * /boot/firmware/cmdline.txt
   * Append `cgroup_enable=memory cgroup_memory=1`
 
 ## Install [Docker] CE
