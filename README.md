@@ -2,7 +2,7 @@
 
 (4) Raspberry Pi 4: 4Gb
 
-Ubuntu: 19.10 (GNU/Linux 5.3.0-1022-raspi2 aarch64)
+Ubuntu: 20.04 LTS (GNU/Linux 5.4.0-1008-raspi aarch64)
 
 Docker CE: Client & Server Version 19.03.8
 
@@ -14,25 +14,39 @@ Microk8s Kubernetes: Client & Server Version 1.18.0
 ## Prepare Hardware
 1. Load [Ubuntu Server] 19.10 onto sd card(s)
 2. Insert SD card into RPI, power on, and directly connect via micro hdmi & keyboard
+3. login at prompt with ubuntu/ubuntu
 3. Change Password (at prompt)
 4. Change [Hostname] by editing these files;
   * /etc/hostname
   * /etc/hosts [edit all occurances of hostname]
-5. Reboot host
-6. Configure [Ethernet] Interface
-  * /etc/netplan/99_config.yaml
+6. Identify Ethernet port
+  * `$ sudo lshw -class network`
+  * Note the interface logical name for the next step
+6. Configure [Ethernet] Interface with permanent static ipv4
+  * create /etc/netplan/99_config.yaml
+```sh
+#Example for logical interface 'eth0'
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      addresses:
+        - 10.10.10.2/24
+      gateway4: 10.10.10.1
+      nameservers:
+          search: [mydomain, otherdomain]
+          addresses: [1.1.1.1, 1.0.0.1]
+```
   * run `$ sudo netplan apply`
-7. **WIP** Configure [SSH]
-  * ~~WORK IN PROGRESS~~ ADDITIONAL INFO HERE https://www.cyberciti.biz/faq/ubuntu-18-04-setup-ssh-public-key-authentication/
-8. Disconnect from RPI, attach to ethernet interface and SSH in from work terminal
+7. Log in to device via [SSH]
+  * From work terminal [example is MacOS terminal]
+  * `$ ssh -l ubuntu <Configured device IP>
+  * Continue if you successfuly get into the shell
+8. Disconnect RPI, attach to ethernet interface and SSH in from work terminal for remaining steps
 8. Fix the Cgroup [bug]!
   * /boot/firmware/nobtcmd.txt
   * Append `cgroup_enable=memory cgroup_memory=1`
-9. Modify ufw to allow cluster communication
-```sh
-$ sudo ufw allow in on cni0 && sudo ufw allow out on cni0
-$ sudo ufw default allow routed
-```
 
 ## Install [Docker] CE
 1. Uninstall old versions
@@ -53,10 +67,11 @@ $ sudo apt-get install \
 5. Verify key fingerprint [9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88]
   * `$ sudo apt-key fingerprint 0EBFCD88`
 6. Perform architecture specific install (arm64 below, others in source document, link in docker header)
+  * **NOTE**: 'bionic' is a temporary fix until 20.04 is supported by Docker, check install link before running!
 ```sh
 $ sudo add-apt-repository \
    "deb [arch=arm64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
+   bionic \
    stable"
 ```
   * Use `uname -m` to determine your architecture
@@ -72,7 +87,12 @@ $ sudo add-apt-repository \
 2. Install all updates available in 'apt' sources
   * `$ sudo apt-get upgrade`
 3. Use a snap to install the latest version
-  * `$ sudo snap install microk8s --classic --channel=1.18/stable`
+  * `$ sudo snap install microk8s --classic`
+4. Modify ufw to allow cluster communication
+```sh
+$ sudo ufw allow in on cni0 && sudo ufw allow out on cni0
+$ sudo ufw default allow routed
+```
 
 #### Build the [Cluster]
 ###### Repeat above steps for each RPI first
@@ -84,7 +104,7 @@ $ sudo add-apt-repository \
   * `$ sudo microk8s.kubectl get node`
 #### Post Install (Master Only)
 1. Enable Microk8s prepackaged Dashboard, DNS, and local storage services
-  * `$ microk8s.enable dashboard dns storage`
+  * `$ sudo microk8s.enable dashboard dns storage`
 2. Create a [new user] account, give it kubectl and docker rights  
   * `$ sudo adduser <username>` and complete all fields
   * `$ sudo usermod -aG microk8s <username>`
@@ -114,8 +134,7 @@ alias kubectl='microk8s.kubectl'
   * `$ kubectl create serviceaccount dashboard-admin-sa`
 3. Bind new account to cluster admin role
 ```sh
-$ create clusterrolebinding dashboard-admin-sa 
---clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
+$ kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
 ```
 4. Pull automatically created token for new account
   * `$ kubectl get secrets`
@@ -143,11 +162,11 @@ kubectl run http --image=katacoda/docker-http-server:latest
 
 
 
-[Ubuntu Server]: <https://ubuntu.com/download/raspberry-pi/thank-you?version=19.10.1&architecture=arm64+raspi3>
+[Ubuntu Server]: <https://ubuntu.com/download/raspberry-pi/thank-you?version=20.04&architecture=arm64+raspi>
 
 [Hostname]: <https://www.cyberciti.biz/faq/ubuntu-change-hostname-command/>
 
-[Ethernet]: <https://help.ubuntu.com/lts/serverguide/network-configuration.html>
+[Ethernet]: <https://ubuntu.com/server/docs/network-configuration>
 
 [SSH]: <https://help.ubuntu.com/lts/serverguide/openssh-server.html>
 
