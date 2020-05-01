@@ -8,11 +8,10 @@ Docker CE: Client & Server Version 19.03.8
 
 Microk8s Kubernetes: Client & Server Version 1.18.0
 
-### Warning: This document has high entropy, last valid test TBD
-## This document is a work in progress, it does not build a working RPI cluster YET.
+### Warning: This document has high entropy, last valid test April 30th, 2020
 
 ## Prepare Hardware
-1. Load [Ubuntu Server] 19.10 onto sd card(s)
+1. Load [Ubuntu Server] onto sd card(s)
 2. Insert SD card into RPI, power on, and directly connect via micro hdmi & keyboard
 3. login at prompt with ubuntu/ubuntu
 3. Change Password (at prompt)
@@ -44,7 +43,7 @@ network:
   * `$ ssh -l ubuntu <Configured device IP>
   * Continue if you successfuly get into the shell
 8. Disconnect RPI, attach to ethernet interface and SSH in from work terminal for remaining steps
-8. Fix the Cgroup [bug], note below is an educated guess as v20.04 has a different file
+8. Fix the Cgroup [bug]
   * /boot/firmware/cmdline.txt
   * Append `cgroup_enable=memory cgroup_memory=1`
 
@@ -53,7 +52,7 @@ network:
   * `$ sudo apt-get remove docker docker-engine docker.io containerd runc`
 2. Update 'apt' package index
   * `$ sudo apt-get update`
-3. Install packages to allow apt'to use a repository over HTTPS
+3. Install packages to allow apt to use a repository over HTTPS
 ```sh
 $ sudo apt-get install \
     apt-transport-https \
@@ -118,12 +117,11 @@ $ sudo ufw default allow routed
   * switch to user for all following steps
   * `$ su - <username>`
 4. Create permanent alias (if Microk8s is only kubernetes implementation running in cluster)
-  * From home folder create '.bash_alias'
+  * From home folder create '.bash_aliases'
 ```sh
 #Alias for Microk8s.kubectl, will work on next login
 alias kubectl='microk8s.kubectl'
 ```
-  * Save and exit
   * Create temporary alias until next login
     * `$ alias kubectl='microk8s.kubectl'`
 5. Connect to Grafana Dashboard using default credentials
@@ -147,21 +145,48 @@ $ kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-adm
   * Copy token
 5. Paste token into entry field of dashboard URL and submit
 
-#### **WIP:** Deploy your first Kubernetes workload from public Docker
-1. Log into Docker
-  * `$docker login`
-  * Provide username/password
-2.  Ensure cluster is healthy
-  * `$ kubectl get nodes` (all nodes should be in 'ready' status)
-  * 
-  
 #### Basic control of pod allocation
-1. Using the [taint] feature
-  * remove node from future scheduling `$ kubectl taint nodes <nodename> key=value:NoSchedule`
-  * remove taint `$ kubectl taint nodes <nodename> <key=value:effect>-` Please note the '-' is NOT a typo!
+1. Using the [taint] feature we can prevent pods starting on the master or other nodes!
+  * Display tainted nodes `$ kubectt describe node | grep Taint`
+  * Remove node from future scheduling `$ kubectl taint nodes <nodename> key=value:NoSchedule`
+  * Remove taint `$ kubectl taint nodes <nodename> <key=value:effect>-` Please note the '-' is NOT a typo!
 
-## test, source oreilly 'start containers using kubectl'
-kubectl run http --image=katacoda/docker-http-server:latest
+####  Deploy your application - [Docker-101] example
+1.  Ensure cluster is healthy
+  * `$ kubectl get nodes` (all nodes should be in 'ready' status)
+2.  Create the deployment file and directory
+  * from home or project directory `$ mkdir docker-101`
+  * create "docker-101.yaml"
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: tutorial
+  name: tutorial
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: tutorial
+  template:
+    metadata:
+      labels:
+        run: tutorial
+    spec:
+      containers:
+      - image: dockersamples/101-tutorial
+        name: tutorial
+        ports:
+        - containerPort: 80
+```
+3. Deploy the application, note that each replicated pod is fronted by a single service
+  * `$ kubectl create -f docker-101.yaml`
+4. Expose the application (allow access from outside the cluster)
+  * `$ kubectl expose deployment tutorial --port 8180 --target-port 80 --external-ip <one of your nodes eth0> --type ClusterIP
+5. Open a web browser and navigate to `http://<external-ip>:8180/` and verify the webpage is running!
+
+# There is so much more to all of these features, but this should be the baseline to get you started!
 
 
 
@@ -188,3 +213,5 @@ kubectl run http --image=katacoda/docker-http-server:latest
 [Dashboard]: <https://www.replex.io/blog/how-to-install-access-and-add-heapster-metrics-to-the-kubernetes-dashboard>
 
 [taint]: <https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/>
+
+[Docker-101]: <https://github.com/dockersamples/101-tutorial>
